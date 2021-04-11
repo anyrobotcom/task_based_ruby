@@ -10,4 +10,4 @@
    5. Dart
    6. Chromedriver
 2. Add bot to your Portal
-3. Add scripts and test if they pass
+3. Add scripts to workflows and test if they pass

@@ -1,46 +1,36 @@
 #!/usr/bin/env python
 
-import subprocess
-return_code = subprocess.call(['chromedriver', '--version'])
-print("Output of call() : ", return_code)
+import os
+import sys
 
-# # Test output with
+# Test output with
 
-# print("Hello world!")
+print("Hello, I'm AnyRobot! 😀")
 
-# # Test Chromedriver (install first)
+# Test Chromedriver (remember to install it first)
 
-# begin
-#   `chromedriver --help`
-#   puts "Chromedriver is present ✅"
-# rescue Errno::ENOENT
-#   abort "No chromedriver present, aborting 🛑"
-# end
+chromedriver_result = os.popen("chromedriver --version").read()
 
-# # Input ARGV
+if chromedriver_result.count("ChromeDriver") > 0:
+  print("Chromedriver is present ✅")
+else:
+  print("No chromedriver present, aborting 🛑")
+  sys.exit(1) # Status code > 0 -> problem
 
-# puts "ARGV (arguments): #{ARGV.inspect}"
-# puts "ENV (environment): #{ENV.inspect}"
+# Input ARGV + ENV
 
-# # Response
+print("Arguments: %s" % sys.argv)
+print("Environment: %s" % os.environ)
 
-# result = nil
+# Response from user / stdin + failure or success
 
-# loop do
-#   puts "Type failure or success script pass to finish script gracefully:"
-#   result = gets.chomp
-#   if ["failure", "success"].include?(result)
-#     break
-#   else
-#     puts "Wrong answer, try again!"
-#   end
-# end
-
-# # Exit code
-
-# case result
-# when "failure"
-#   abort "Failed!"
-# when "success"
-#   puts "Gets done!"
-# end
+while True:
+  input_result = input("Type failure or success script pass to finish script gracefully: ").strip()
+  if input_result == "failure":
+    print("Failed!")
+    sys.exit(1) # Status code > 0 -> problem
+  elif input_result == "success":
+    print("Gets done!")
+    break
+  else:
+    print("Wrong answer, try again...")

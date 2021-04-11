@@ -1,12 +1,10 @@
 #!/usr/bin/env ruby
 
-require "pry"
-
 # Test output with
 
-puts "Hello world!"
+puts "Hello, I'm AnyRobot! 😀"
 
-# Test Chromedriver (install first)
+# Test Chromedriver (remember to install it first)
 
 begin
   `chromedriver --help`
@@ -15,30 +13,23 @@ rescue Errno::ENOENT
   abort "No chromedriver present, aborting 🛑"
 end
 
-# Input ARGV
+# Print ARGV + ENV
 
-puts "ARGV (arguments): #{ARGV.inspect}"
-puts "ENV (environment): #{ENV.inspect}"
+puts "Arguments: #{ARGV.inspect}"
+puts "Environment: #{ENV.inspect}"
 
-# Response
+# Response from user / stdin + failure or success
 
 result = nil
 
 loop do
   puts "Type failure or success script pass to finish script gracefully:"
-  result = gets.chomp
-  if ["failure", "success"].include?(result)
-    break
+  input_result = gets.chomp
+  if input_result == "failure"
+    abort "Failed!"
+  elsif input_result == "success"
+    puts "Gets done!"
   else
-    puts "Wrong answer, try again!"
+    puts "Wrong answer, try again..."
   end
-end
-
-# Exit code
-
-case result
-when "failure"
-  abort "Failed!"
-when "success"
-  puts "Gets done!"
 end
