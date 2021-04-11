@@ -2,6 +2,7 @@
 
 import os
 import sys
+from pprint import pprint
 
 # Test output with
 
@@ -25,7 +26,8 @@ print("Environment: %s" % os.environ)
 # Response from user / stdin + failure or success
 
 while True:
-  input_result = input("Type failure or success script pass to finish script gracefully: ").strip()
+  print("Type failure or success script pass to finish script gracefully: ")
+  input_result = sys.stdin.readline().rstrip()
   if input_result == "failure":
     print("Failed!")
     sys.exit(1) # Status code > 0 -> problem
