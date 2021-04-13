@@ -1,0 +1,17 @@
+{
+  "job_id": "bc55c654-94a6-11eb-a8b3-0242ac130003",
+  "workflow_id": "c6d0fd24-94a6-11eb-a8b3-0242ac130003",
+  "workflow_name": "Testowy workflow nie wiem czego",
+  "trigger_name": "schedule",
+  "trigger_id": "2d11707c-96ce-11eb-a8b3-0242ac130003",
+  "task": {
+    "method": "download",
+    "download_url": "https://wwww.serwer/plik.rb"
+  },
+  "assist_requests_url": "https://serwer.xxx.yyy.com/api/v1/jobs/123e4567-e89b-12d3-a456-426614174000/assist_requests",
+  "results_url": "https://serwer.xxx.yyy.com/api/v1/jobs/123e4567-e89b-12d3-a456-426614174000/results",
+  "parameters": {
+    "dupa": "jasio",
+    "lorem": "ipsum"
+  }
+}

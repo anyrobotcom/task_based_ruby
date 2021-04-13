@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'json'
+
 # Test output with
 
 puts "Hello, I'm AnyRobot! 😀"
@@ -13,8 +15,14 @@ rescue Errno::ENOENT
   abort "No chromedriver present, aborting 🛑"
 end
 
+# Load payload
+
+file = File.read("payload.json")
+payload = JSON.parse(file)
+
 # Print ARGV + ENV
 
+puts "Payload: #{payload.inspect}"
 puts "Arguments: #{ARGV.inspect}"
 puts "Environment: #{ENV.inspect}"
 
