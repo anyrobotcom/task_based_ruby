@@ -8,7 +8,7 @@ gemfile do
   gem 'faraday', '1.1.0'
 end
 
-abort 'Usage: ./assist_request_input PORTAL_URL BOT_SECRET JOB_ID' unless ARGV.size == 3
+abort 'Usage: ./job_results_failure_all_attachments.rb PORTAL_URL BOT_SECRET JOB_ID' unless ARGV.size == 3
 portal_url, bot_secret, job_id = ARGV
 
 
