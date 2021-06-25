@@ -17,7 +17,7 @@ end
 
 # Load payload
 
-file = File.read("payload.json")
+file = File.read("./input/payload.json")
 payload = JSON.parse(file)
 
 # Print ARGV + ENV

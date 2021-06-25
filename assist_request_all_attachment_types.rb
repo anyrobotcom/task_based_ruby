@@ -23,9 +23,10 @@ response = Faraday.post(payload['assist_requests_url']) do |req|
 end ; response = JSON.parse response.body
 
 abort "Failed to create Assist Request: #{response['error']}" unless '201 Created' == response['status']
+assist_request_poll_url = response['url']
 
 assist_request_response = loop do
-  response = Faraday.get(response['url']) do |req|
+  response = Faraday.get(assist_request_poll_url) do |req|
     req.headers['Authorization'] = 'Bearer ' + payload['secret']
   end ; response = JSON.parse response.body
 
