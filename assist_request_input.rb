@@ -8,21 +8,20 @@ gemfile do
   gem 'faraday', '1.1.0'
 end
 
-abort 'Usage: ./assist_request_input PORTAL_URL BOT_SECRET JOB_ID' unless ARGV.size == 3
-portal_url, bot_secret, job_id = ARGV
+payload = JSON.parse(File.read './input/payload.json')
 
-response = Faraday.post("#{portal_url}/api/v1/jobs/#{job_id}/assist_requests") do |req|
+response = Faraday.post(payload['assist_requests_url']) do |req|
   req.headers['Content-Type'] = 'application/json'
-  req.headers['Authorization'] = 'Bearer ' + bot_secret
+  req.headers['Authorization'] = 'Bearer ' + payload['secret']
   req.body = { genre: :input, question: 'Is it assisted already?', required: true, confirm: 'confirm', short: true }.to_json
 end ; response = JSON.parse response.body
 
 abort "Failed to create Assist Request: #{response['error']}" unless '201 Created' == response['status']
-assist_request_id = response['id']
+assist_request_poll_url = response['url']
 
 assist_request_response = loop do
-  response = Faraday.get("#{portal_url}/api/v1/assist_requests/#{assist_request_id}") do |req|
-    req.headers['Authorization'] = 'Bearer ' + bot_secret
+  response = Faraday.get(assist_request_poll_url) do |req|
+    req.headers['Authorization'] = 'Bearer ' + payload['secret']
   end ; response = JSON.parse response.body
 
   break response['response'] if response['response']

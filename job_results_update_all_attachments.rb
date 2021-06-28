@@ -8,13 +8,11 @@ gemfile do
   gem 'faraday', '1.1.0'
 end
 
-abort 'Usage: ./job_results_update_all_attachments.rb PORTAL_URL BOT_SECRET JOB_ID' unless ARGV.size == 3
-portal_url, bot_secret, job_id = ARGV
+payload = JSON.parse(File.read './input/payload.json')
 
-
-response = Faraday.post("#{portal_url}/api/v1/jobs/#{job_id}/results") do |req|
+response = Faraday.post(payload['results_url']) do |req|
   req.headers['Content-Type'] = 'application/json'
-  req.headers['Authorization'] = 'Bearer ' + bot_secret
+  req.headers['Authorization'] = 'Bearer ' + payload['secret']
   req.body = { genre: :update, result: { color: :orange }, attachments: [
     { genre: :text, name: 'list.txt', code: :important_stuff, body: 'ok' },
     { genre: :html, name: 'list.htm', code: :important_stuff, body: '<p>ok</p>' },
