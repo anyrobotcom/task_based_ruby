@@ -9,6 +9,7 @@ require 'webdrivers'
 class VisualAutomation 
   @@localUrl = 'http://localhost:7777/api/v1'
 
+  # Gets visual automation server status
   def self.status
     response = Faraday.get "#{@@localUrl}/status"
     puts "code #{response.status}"
@@ -19,6 +20,7 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
+  # Gets and displays openapi.json
   def self.openapi
     response = Faraday.get "#{@@localUrl}/openapi.json"
     puts "code #{response.status}"
@@ -70,10 +72,14 @@ class VisualAutomation
   end
 
   # Visual Find
-  def self.visual_find(screen, image_path, search_index)
+  # Params:
+  # - screen: screen index, starting from 0
+  # - image_path: path to image file
+  # - index: index of a result that will be returned, if -1 all results will be returned ordered by certainty
+  def self.visual_find(screen, image_path, index = -1, threshold = 0.99)
     conn = Faraday.new(
       url: "#{@@localUrl}/visual/find",
-      params: { 'screen' => screen, 'index' => search_index }
+      params: { 'screen' => screen, 'index' => index, 'threshold' => threshold }
       ) do |f|
       f.request :multipart
       f.request :url_encoded
@@ -102,7 +108,17 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
-  def self.click_image(screen, image_path, index, button = 0, offset_x = 0, offset_y = 0, double = false, threshold = 0)
+  # Click on imaged
+  # Params:
+  # - screen: screen index, starting from 0
+  # - image_path: to image file
+  # - index: index of a result that will be clicked
+  # - button: 'left', 'right' or 'middle'
+  # - offset_x: x click offset from the center of image
+  # - offset_y: y click offset from the center of image
+  # - double: true for doubleclick, false for single
+  # - threshold: image search threshold (default = 0.99, default is used if threshold = 0)
+  def self.click_image(screen, image_path, index, button = 'left', offset_x = 0, offset_y = 0, double = false, threshold = 0)
     conn = Faraday.new(
       url: "#{@@localUrl}/click/image",
       params: { 
@@ -123,7 +139,7 @@ class VisualAutomation
     puts "image_path = #{image_path}"
     payload = { :file => Faraday::UploadIO.new(image_path, 'image/png') }
 
-    puts payload
+    # puts payload
 
     response = conn.post('', payload) do |req|
       req.options.timeout = 60
@@ -142,7 +158,16 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
-  def self.click_coordinates(x, y, screen = 0, button = 0, double = false)
+  # Click on coordinates
+  # Params:
+  # - x: x coordinate
+  # - y: y coordinate
+  # - screen: screen index, starting from 0
+  # - button: 'left', 'right' or 'middle'
+  # - double: true for doubleclick, false for single
+  def self.click_coordinates(x, y, screen = 0, button = 'left', double = false)
+    puts "click_coordinates x=#{x} y=#{y} screen=#{screen} button=#{button} double=#{double}"
+
     conn = Faraday.new(
       url: "#{@@localUrl}/click/coordinates",
       params: { 'screen' => screen, 'button' => button, 'double' => double, 'x' => x, 'y' => y }
@@ -162,6 +187,11 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
+  # Hover on coordinates
+  # Params:
+  # - x: x coordinate
+  # - y: y coordinate
+  # - screen: screen index, starting from 0
   def self.hover(x, y, screen = 0)
     conn = Faraday.new(
       url: "#{@@localUrl}/hover",
@@ -182,8 +212,25 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
+
+  # Click on text
+  # Params:
+  # - lang: text language
+  # - text: (string) text to find
+  # - screen: screen index, starting from 0
+  # - button: 'left', 'right' or 'middle'
+  # - double: true for doubleclick, false for single
+  # - index: search result index to use, default is 0 - first result
+  # - offset_x: click x offset from the center of text
+  # - offset_y: click y offset from the center of text
+  # - roi_x: x coord of ROI rect
+  # - roi_y: y coord of ROI rect
+  # - roi_w: ROI width
+  # - roi_h: ROI height
+  # - black_text: default true, false for invert preprocessing - helps in some scenarios with light text on dark background
+  # - do_not_preprocess: if true disables screen capture preprocessing before character recognition is triggered - use on special ocations if nothing helps
   def self.click_text(lang, text, screen = 0, button = 0, double = false, index = 0, 
-    offset_x = 0, offset_y = 0, roi_x = -1, roi_y = -1, roi_w = -1, roi_h = -1)
+    offset_x = 0, offset_y = 0, roi_x = -1, roi_y = -1, roi_w = -1, roi_h = -1, black_text = true, do_not_preprocess = false)
     conn = Faraday.new(
       url: "#{@@localUrl}/click/text",
       params: { 
@@ -198,7 +245,9 @@ class VisualAutomation
         'roi_x' => roi_x,
         'roi_y' => roi_y,
         'roi_w' => roi_w,
-        'roi_h' => roi_h
+        'roi_h' => roi_h,
+        'black_text' => black_text,
+        'do_not_preprocess' => do_not_preprocess
       }
       ) do |f|
       f.request :url_encoded
@@ -217,6 +266,16 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
+
+  # Perform drag and drop action
+  # Params:
+  # - screen: screen index, starting from 0
+  # - start_x: drag start x coordinate
+  # - start_y: drag start y coordinate
+  # - end_x: drop end x coordinate
+  # - end_y: drop end y coordinate
+  # - button: 'left', 'right' or 'middle'
+  # - speed: drag and drop animation speed
   def self.drag_and_drop(screen, start_x, start_y, end_x, end_y, button = 0, speed = 1)
     conn = Faraday.new(
       url: "#{@@localUrl}/drag_and_drop",
@@ -246,18 +305,32 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
-
-  def self.ocr_find(language, text, screen = 0, roi_x = -1, roi_y = -1, roi_w = -1, roi_h = -1)
+  # Find text on screen
+  # Params:
+  # - language: text language
+  # - text: (string) text to find
+  # - screen: screen index, starting from 0
+  # - index: search index to display, if -1 all results are displayed
+  # - roi_x: x coord of ROI rect
+  # - roi_y: y coord of ROI rect
+  # - roi_w: ROI width
+  # - roi_h: ROI height
+  # - black_text: default true, false for invert preprocessing - helps in some scenarios with light text on dark background
+  # - do_not_preprocess: if true disables screen capture preprocessing before character recognition is triggered - use on special ocations if nothing helps
+  def self.ocr_find(language, text, screen = 0, index = -1, roi_x = -1, roi_y = -1, roi_w = -1, roi_h = -1, black_text = true, do_not_preprocess = false)
     conn = Faraday.new(
       url: "#{@@localUrl}/ocr/find",
       params: { 
         'language' => language,
         'text' => text,
         'screen' => screen,
+        'index' => index,
         'roi_x' => roi_x,
         'roi_y' => roi_y,
         'roi_w' => roi_w,
-        'roi_h' => roi_h
+        'roi_h' => roi_h,
+        'black_text' => black_text,
+        'do_not_preprocess' => do_not_preprocess
       }
       ) do |f|
       f.request :url_encoded
@@ -277,7 +350,19 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
-  def self.ocr_get(language, screen = 0, roi_x = -1, roi_y = -1, roi_w = -1, roi_h = -1)
+  # Get text from screen
+  # Params:
+  # - language: text language
+  # - screen: screen index, starting from 0
+  # - roi_x: x coord of ROI rect
+  # - roi_y: y coord of ROI rect
+  # - roi_w: ROI width
+  # - roi_h: ROI height
+  # - black_text: default true, false for invert preprocessing - helps in some scenarios with light text on dark background
+  # - do_not_preprocess: if true disables screen capture preprocessing before character recognition is triggered - use on special ocations if nothing helps
+  def self.ocr_get(language, screen = 0, roi_x = -1, roi_y = -1, roi_w = -1, roi_h = -1, black_text = true, do_not_preprocess = false)
+    puts "ocr_get roi_x=#{roi_x} roi_y=#{roi_y} roi_w=#{roi_w} roi_h=#{roi_h}"
+
     conn = Faraday.new(
       url: "#{@@localUrl}/ocr/get",
       params: { 
@@ -286,7 +371,9 @@ class VisualAutomation
         'roi_x' => roi_x,
         'roi_y' => roi_y,
         'roi_w' => roi_w,
-        'roi_h' => roi_h
+        'roi_h' => roi_h,
+        'black_text' => black_text,
+        'do_not_preprocess' => do_not_preprocess
       }
       ) do |f|
       f.request :url_encoded
@@ -305,6 +392,10 @@ class VisualAutomation
     abort "Failed, exception: #{e}"
   end
 
+
+  # Simulate keyboard input
+  # Params:
+  # - keys: key sequence to type in special format, see docs
   def self.type(keys)
     conn = Faraday.new(
       url: "#{@@localUrl}/type",
@@ -409,12 +500,17 @@ end
 
 begin
 
+  puts 'Check server status'
+  VisualAutomation.status
+
+  puts 'Openapi.json'
+  VisualAutomation.openapi
+
   puts 'CHROMEDRIVER TESTS'
   dpi_factor = VisualAutomation.status.screens[0]['dpi_factor']
   
-  # configure the driver to run in headless mode
-  options = Selenium::WebDriver::Chrome::Options.new
-  # options.add_argument('--headless')
+  
+  options = Selenium::WebDriver::Chrome::Options.new  
   driver = Selenium::WebDriver.for :chrome, options: options
   driver.navigate.to "https://www.google.com"
   
@@ -425,35 +521,21 @@ begin
 
   chrome_width = (chrome_width * dpi_factor).round
   chrome_height = (chrome_height * dpi_factor).round
-  # chrome_x = (chrome_x * dpi_factor).round
-  # chrome_y = (chrome_y * dpi_factor).round
 
   puts "#{chrome_width} x #{chrome_height} +#{chrome_x} +#{chrome_y}"
-  
 
   puts "driver.class = #{driver.class}"
 
   VisualAutomation.enable_debug
-  sleep 3
-
-  # globe_image = MiniMagick::Image.open('globe.png')
-  # globe_image.resize "#{globe_image.width * dpi_factor}x#{globe_image.height * dpi_factor}"
-  # click_image_result = VisualAutomation.click_image(0, globe_image.tempfile.path, 0)
-  # puts click_image_result
-  # sleep 10
-
-  VisualAutomation.disable_debug
   ocr_result = VisualAutomation.ocr_get('pol', 0, chrome_x, chrome_y, chrome_width, chrome_height)
   puts ocr_result.plain_text
-  sleep 7
-
-  VisualAutomation.enable_debug
+  sleep 1
 
   VisualAutomation.type('[CONTROL][L]https[shift][;]//www.w3schools.com/[shift][h][shift][t][shift][M][shift][L]/tryit.asp[shift][?]filename=tryhtml5[shift][-]draganddrop[enter]')
-  sleep 3
 
+  sleep 3
   puts 'Looking for "Accept all"'
-  VisualAutomation.click_text('eng', 'Accept all', 0, 0, false, 0, 0, 0, chrome_x, chrome_y, chrome_width, chrome_height)
+  VisualAutomation.click_text('eng', 'Accept all', 0, 0, false, 0, 0, 0, chrome_x, chrome_y - (chrome_height/2).round, chrome_width, (chrome_height/3).round, false)
   puts 'Found "Accept all"'
   sleep 3
   
@@ -466,60 +548,71 @@ begin
   find_result = VisualAutomation.visual_find(0, w3img.tempfile.path, 0)
   puts find_result
 
-  start_x = find_result.x + find_result.w / 2
-  start_y = find_result.y - find_result.h / 2
+  start_x = (find_result.x + find_result.w / 2).round
+  start_y = (find_result.y - find_result.h / 2).round
 
-  end_y = start_y + find_result.h
+  end_y = start_y + (find_result.h * 1.4).round
   end_x = start_x
 
   sleep 2
   VisualAutomation.drag_and_drop(0, start_x, start_y, end_x, end_y)
 
-  sleep 4
+  sleep 5
+
+  VisualAutomation.type('[CONTROL][L]justjoin.it[enter]')
+  sleep 3
+
+  VisualAutomation.type('[win][up]')
+  sleep 1
+
+  # update chrome window rect after win+up
+  chrome_width = driver.manage.window.size.width
+  chrome_height = driver.manage.window.size.height
+  chrome_x = driver.manage.window.position.x
+  chrome_y = VisualAutomation.status.screens[0]['height'] - driver.manage.window.position.y
+
+  chrome_width = (chrome_width * dpi_factor).round
+  chrome_height = (chrome_height * dpi_factor).round
+
+  # get rid of "night mode" popup on justjoit.it
+  VisualAutomation.click_coordinates((chrome_width/2).round, VisualAutomation.status.screens[0]['height'] - (150 * dpi_factor).round)
+  sleep 1
+
+  ruby_image = MiniMagick::Image.open('ruby.png')
+  ruby_image.resize "#{ruby_image.width / 2 * dpi_factor}x#{ruby_image.height / 2 * dpi_factor}"
+
+  puts 'VisualFind ruby icon'
+  puts VisualAutomation.click_image(0, ruby_image.tempfile.path, 0)
+  sleep 10
+
   VisualAutomation.hover(chrome_x + chrome_width - 15, chrome_y - 15)
   
   sleep 4
+
+  # close chrome
   VisualAutomation.click_coordinates(chrome_x + chrome_width - 15, chrome_y - 15)
   
-
-  
-  puts 'Chromedriver test done [enter]'
+  puts 'Chromedriver test done'
   driver.close
-  gets
-
-  puts 'Check server status'
-  VisualAutomation.status
-
-  puts 'Openapi.json'
-  VisualAutomation.openapi
-
-  puts 'Enabling debug layer'
-  VisualAutomation.enable_debug
-
-  # VisualAutomation.click_coordinates(100, 100)
-  # VisualAutomation.click_text('eng', 'Debug')
 
   return
+
+  # ADDITIONAL TEST - uncomment if necessary
 
   puts 'Disabling debug layer'
   VisualAutomation.disable_debug
 
-  puts 'Enabling debug layer'
-  VisualAutomation.enable_debug
+  VisualAutomation.enable_debug 1
 
-  puts 'Taking screenshot...'
-  im = VisualAutomation.screenshot
-  puts 'Screenshot DONE'
+  screenshot = Visual.screenshot
 
   search_width = 650
   search_height = 650
 
-  VisualAutomation.disable_debug
-  VisualAutomation.enable_debug 1
-  VisaulTests.visual_find_test(im, 10, 7, search_width, search_height, 1.5)
+  VisaulTests.visual_find_test(screenshot, 10, 4, search_width, search_height)
 
+  puts 'Disabling debug layer'
   VisualAutomation.disable_debug
-  VisualAutomation.enable_debug
 
   puts 'End of Visual Find tests.'
 
