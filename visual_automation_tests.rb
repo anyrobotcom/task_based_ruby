@@ -76,7 +76,7 @@ class VisualAutomation
   # - screen: screen index, starting from 0
   # - image_path: path to image file
   # - index: index of a result that will be returned, if -1 all results will be returned ordered by certainty
-  def self.visual_find(screen, image_path, index = -1, threshold = 0.99)
+  def self.visual_find(screen, image_path, index = -1, threshold = 990)
     conn = Faraday.new(
       url: "#{@@localUrl}/visual/find",
       params: { 'screen' => screen, 'index' => index, 'threshold' => threshold }
@@ -422,7 +422,7 @@ end
 class Helpers
 
   def self.crop_random(image, width, height)
-    raise TypeError, 'image must be MiniMagic::Image' unless image.is_a?(MiniMagick::Image)
+    raise TypeError, 'image must be MiniMagick::Image' unless image.is_a?(MiniMagick::Image)
 
     raise ArgumentError, 'size bigger than image' unless width < image.width && height < image.height
 
@@ -527,19 +527,20 @@ begin
   puts "driver.class = #{driver.class}"
 
   VisualAutomation.enable_debug
-  ocr_result = VisualAutomation.ocr_get('pol', 0, chrome_x, chrome_y, chrome_width, chrome_height)
+  ocr_result = VisualAutomation.ocr_get('eng', 0, chrome_x, chrome_y, chrome_width, chrome_height)
   puts ocr_result.plain_text
   sleep 1
 
   VisualAutomation.type('[CONTROL][L]https[shift][;]//www.w3schools.com/[shift][h][shift][t][shift][M][shift][L]/tryit.asp[shift][?]filename=tryhtml5[shift][-]draganddrop[enter]')
 
-  sleep 3
+  sleep 5
   puts 'Looking for "Accept all"'
-  VisualAutomation.click_text('eng', 'Accept all', 0, 0, false, 0, 0, 0, chrome_x, chrome_y - (chrome_height/2).round, chrome_width, (chrome_height/3).round, false)
+  VisualAutomation.click_text('eng', 'Accept all', 0, 0, false, 0, 0, 0, chrome_x + 200, chrome_y - (chrome_height/2).round, chrome_width - 250, (chrome_height/3).round, false)
   puts 'Found "Accept all"'
   sleep 3
   
-  w3img = MiniMagick::Image.open('logo.png')
+  w3img = MiniMagick::Image.open('http://odyn.bivrost360.com/~gawson/logo.png')
+  # w3img = MiniMagick::Image.open('logo.png')
   puts w3img.width
   
   w3img.resize "#{w3img.width * dpi_factor}x#{w3img.height * dpi_factor}"
@@ -563,7 +564,7 @@ begin
   sleep 3
 
   VisualAutomation.type('[win][up]')
-  sleep 1
+  sleep 4
 
   # update chrome window rect after win+up
   chrome_width = driver.manage.window.size.width
@@ -576,14 +577,17 @@ begin
 
   # get rid of "night mode" popup on justjoit.it
   VisualAutomation.click_coordinates((chrome_width/2).round, VisualAutomation.status.screens[0]['height'] - (150 * dpi_factor).round)
-  sleep 1
+  sleep 2
 
-  ruby_image = MiniMagick::Image.open('ruby.png')
-  ruby_image.resize "#{ruby_image.width / 2 * dpi_factor}x#{ruby_image.height / 2 * dpi_factor}"
+  ruby_image = MiniMagick::Image.open('http://odyn.bivrost360.com/~gawson/ruby.png')
+  # ruby_image = MiniMagick::Image.open('ruby.png')
+  puts 'Image downloaded'
+
+  ruby_image.resize "#{ruby_image.width * dpi_factor}x#{ruby_image.height * dpi_factor}"
 
   puts 'VisualFind ruby icon'
   puts VisualAutomation.click_image(0, ruby_image.tempfile.path, 0)
-  sleep 10
+  sleep 4
 
   VisualAutomation.hover(chrome_x + chrome_width - 15, chrome_y - 15)
   
