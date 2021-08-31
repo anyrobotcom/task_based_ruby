@@ -597,8 +597,7 @@ begin
   VisualAutomation.click_coordinates(chrome_x + chrome_width - 15, chrome_y - 15)
   
   puts 'Chromedriver test done'
-  driver.close
-
+  
   return
 
   # ADDITIONAL TEST - uncomment if necessary
