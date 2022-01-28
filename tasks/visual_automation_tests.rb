@@ -3,7 +3,7 @@ require 'json'
 require 'mini_magick'
 require 'faraday'
 require 'ostruct'
-require 'webdrivers'
+require 'webdrivers/chromedriver'
 require_relative '../lib/helper'
 
 include Helper
