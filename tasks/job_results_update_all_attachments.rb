@@ -6,11 +6,6 @@ require_relative '../lib/helper'
 
 include Helper
 
-gemfile do
-  source 'https://rubygems.org'
-  gem 'faraday', '1.1.0'
-end
-
 payload = load_payload
 
 response = Faraday.post(payload['results_url']) do |req|
