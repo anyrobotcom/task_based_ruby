@@ -8,12 +8,12 @@ gemfile do
   gem 'faraday', '1.1.0'
 end
 
-payload = JSON.parse(File.read './input/payload.json')
+payload = JSON.parse(File.read '../assets/payload.json')
 
 response = Faraday.post(payload['assist_requests_url']) do |req|
   req.headers['Content-Type'] = 'application/json'
   req.headers['Authorization'] = 'Bearer ' + payload['secret']
-  req.body = { genre: :checkboxes, question: 'Which color?', choices: { 'RED' => :red, 'GREEN' => 'green', 'BLUE' => :blue } }.to_json
+  req.body = { genre: :select, question: 'Which color?', multi_select: true, choices: { 'RED' => :red, 'GREEN' => 'green', 'BLUE' => :blue } }.to_json
 end ; response = JSON.parse response.body
 
 abort "Failed to create Assist Request: #{response['error']}" unless '201 Created' == response['status']
