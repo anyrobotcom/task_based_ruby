@@ -2,6 +2,8 @@
 
 require 'json'
 
+$stdout.sync = true
+
 # Test output with
 
 puts "Hello, I'm AnyRobot! 😀"
