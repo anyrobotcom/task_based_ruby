@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'json'
+require_relative '../lib/helper'
+
+include Helper
 
 $stdout.sync = true
 
@@ -18,10 +21,7 @@ rescue Errno::ENOENT
 end
 
 # Load payload
-puts ARGV[0]
-dir = ARGV[0] || Dir.pwd
-file = File.read(File.join(dir, 'input/payload.json'))
-payload = JSON.parse(file)
+payload = load_payload
 
 # Print ARGV + ENV
 
