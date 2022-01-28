@@ -2,6 +2,7 @@
 
 require 'bundler/inline'
 require 'json'
+require 'faraday'
 require_relative '../lib/helper'
 
 include Helper
