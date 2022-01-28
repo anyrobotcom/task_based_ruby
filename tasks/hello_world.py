@@ -22,17 +22,3 @@ else:
 
 print("Arguments: %s" % sys.argv)
 print("Environment: %s" % os.environ)
-
-# Response from user / stdin + failure or success
-
-while True:
-  print("Type failure or success script pass to finish script gracefully: ")
-  input_result = sys.stdin.readline().rstrip()
-  if input_result == "failure":
-    print("Failed!")
-    sys.exit(1) # Status code > 0 -> problem
-  elif input_result == "success":
-    print("Gets done!")
-    break
-  else:
-    print("Wrong answer, try again...")

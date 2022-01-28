@@ -27,19 +27,3 @@ payload = JSON.parse(file)
 puts "Payload: #{payload.inspect}"
 puts "Arguments: #{ARGV.inspect}"
 puts "Environment: #{ENV.inspect}"
-
-# Response from user / stdin + failure or success
-
-result = nil
-
-loop do
-  puts "Type failure or success script pass to finish script gracefully:"
-  input_result = gets.chomp
-  if input_result == "failure"
-    abort "Failed!"
-  elsif input_result == "success"
-    puts "Gets done!"
-  else
-    puts "Wrong answer, try again..."
-  end
-end
