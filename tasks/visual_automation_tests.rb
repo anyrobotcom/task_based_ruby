@@ -4,6 +4,9 @@ require 'mini_magick'
 require 'faraday'
 require 'ostruct'
 require 'webdrivers'
+require_relative '../lib/helper'
+
+include Helper
 
 # VisualAutomation examples
 class VisualAutomation 

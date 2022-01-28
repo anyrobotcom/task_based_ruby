@@ -2,13 +2,16 @@
 
 require 'bundler/inline'
 require 'json'
+require_relative '../lib/helper'
+
+include Helper
 
 gemfile do
   source 'https://rubygems.org'
   gem 'faraday', '1.1.0'
 end
 
-payload = JSON.parse(File.read './payload.json')
+payload = load_payload
 
 60.times do
   response = Faraday.post(payload['live_logging_url']) do |req|
