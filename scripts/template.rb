@@ -12,7 +12,7 @@ def run_command_with_live_logging(cmd)
   end
 end
 
-run_command_with_live_logging("cd \"#{ENV['HOME']}/anyrobot/runnertests/tasks\" && bundle exec ruby script.rb")
+run_command_with_live_logging("cd \"#{ENV['HOME']}/anyrobot/runnertests/tasks\" && bundle exec ruby script.rb \"#{Dir.pwd}\"")
 
 if $?.success?
   exit 0

@@ -8,7 +8,7 @@ gemfile do
   gem 'faraday', '1.1.0'
 end
 
-payload = JSON.parse(File.read '../assets/payload.json')
+payload = JSON.parse(File.read './payload.json')
 
 response = Faraday.post(payload['results_url']) do |req|
   req.headers['Content-Type'] = 'application/json'

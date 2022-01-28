@@ -8,7 +8,7 @@ gemfile do
   gem 'faraday', '1.1.0'
 end
 
-payload = JSON.parse(File.read '../assets/payload.json')
+payload = JSON.parse(File.read './payload.json')
 
 60.times do
   response = Faraday.post(payload['live_logging_url']) do |req|

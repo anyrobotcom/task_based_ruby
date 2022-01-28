@@ -18,8 +18,8 @@ rescue Errno::ENOENT
 end
 
 # Load payload
-
-file = File.read("../assets/payload.json")
+dir = ARGV[0] || Dir.pwd
+file = File.read(File.join(dir, 'input/payload.json'))
 payload = JSON.parse(file)
 
 # Print ARGV + ENV
