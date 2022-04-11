@@ -1,13 +1,15 @@
 # RunnerTests - AnyRobot Runner testing suite
 
+## Setup
+
+```shell
+mkdir ~/Code
+cd ~/Code && git clone git@gitlab.unitedideas.co:anyrobot/runnertests.git
+cd runnertests && bundle install
+```
+
 ## How to
 
-1. Install on your machine:
-   1. AnyRobot Runner from https://install.anyrobot.com and grant all required rights
-   2. Ruby
-   3. Python
-   4. Node
-   5. Dart
-   6. Chromedriver
+1. Install `AnyRobot Runner` on your machine and grant rights if needed
 2. Add bot to your Portal
-3. Add scripts to workflows and test if they pass
+3. Add workflows to portal using files from `scripts/` folder

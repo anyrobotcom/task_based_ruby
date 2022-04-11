@@ -12,7 +12,7 @@ def run_command_with_live_logging(cmd)
   end
 end
 
-run_command_with_live_logging("cd \"#{ENV['HOME']}/anyrobot/runnertests/tasks\" && dart run hello_world.dart \"#{Dir.pwd}\"")
+run_command_with_live_logging("cd \"#{ENV['HOME']}/Code/runnertests/tasks\" && dart run hello_world.dart \"#{Dir.pwd}\"")
 
 if $?.success?
   exit 0

@@ -98,6 +98,7 @@ GEM
     yard (0.9.26)
 
 PLATFORMS
+  arm64-darwin-21
   x64-mingw32
   x86_64-linux
 
