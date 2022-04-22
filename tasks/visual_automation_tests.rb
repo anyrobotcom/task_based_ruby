@@ -8,6 +8,20 @@ require_relative '../lib/helper'
 
 include Helper
 
+class Platform
+  def self.mac
+    success = (/darwin/ =~ RUBY_PLATFORM) != nil
+  rescue StandardError => e
+    puts 'czarymary'
+  end
+
+  def self.win
+    success = (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
+  rescue StandardError => e
+    puts 'abrakadabra'
+  end
+end
+
 # VisualAutomation examples
 class VisualAutomation 
   @@localUrl = 'http://localhost:7777/api/v1'
@@ -101,6 +115,9 @@ class VisualAutomation
 
     puts "visual_find.response.status==#{response.status}"
     if response.status != 200
+      json = JSON.parse response.body
+      puts 'ERROR RESPONSE'
+      puts json
       false
     else
       json = JSON.parse response.body
@@ -264,9 +281,9 @@ class VisualAutomation
 
     puts "code #{response.status}"
     puts "response #{response.body}"
-    abort 'Failed checking status' unless response.status == 201
-  rescue StandardError => e
-    abort "Failed, exception: #{e}"
+    raise 'Failed checking status' unless response.status == 201
+  #rescue StandardError => e
+   # abort "Failed, exception: #{e}"
   end
 
 
@@ -448,6 +465,14 @@ class Helpers
 
 end
 
+
+
+# ================================================================================================
+
+
+
+
+
 # VisualAutomation example tests
 class VisaulTests
 
@@ -503,6 +528,10 @@ end
 
 begin
 
+# normal test startup ====================================================
+
+
+
   puts 'Check server status'
   VisualAutomation.status
 
@@ -512,11 +541,24 @@ begin
   puts 'CHROMEDRIVER TESTS'
   dpi_factor = VisualAutomation.status.screens[0]['dpi_factor']
   
-  
-  options = Selenium::WebDriver::Chrome::Options.new  
+  puts 'dpi_factor == '
+  puts dpi_factor
+
+  puts 'CHECKING SYSTEM PLATFORM'
+  if Platform.win
+    puts 'Platform WIN'
+  elsif Platform.mac
+    puts 'Platform MAC'
+  else
+    puts 'Unknown Platform'
+    abort
+  end
+
+
+  options = Selenium::WebDriver::Chrome::Options.new
   driver = Selenium::WebDriver.for :chrome, options: options
-  driver.navigate.to "https://www.google.com"
-  
+  driver.navigate.to "https://www.google.com/?&hl=en-US"
+
   chrome_width = driver.manage.window.size.width
   chrome_height = driver.manage.window.size.height
   chrome_x = driver.manage.window.position.x
@@ -530,19 +572,52 @@ begin
   puts "driver.class = #{driver.class}"
 
   VisualAutomation.enable_debug
+
+  sleep 5
+
   ocr_result = VisualAutomation.ocr_get('eng', 0, chrome_x, chrome_y, chrome_width, chrome_height)
   puts ocr_result.plain_text
   sleep 1
 
-  VisualAutomation.type('[CONTROL][L]https[shift][;]//www.w3schools.com/[shift][h][shift][t][shift][M][shift][L]/tryit.asp[shift][?]filename=tryhtml5[shift][-]draganddrop[enter]')
-
+  if Platform.win
+    VisualAutomation.type('[CONTROL][L]')
+    sleep 1
+    VisualAutomation.type('https[shift][;]//www.w3schools.com/[shift][h][shift][t][shift][M][shift][L]/tryit.asp[shift][?]filename=tryhtml5[shift][-]draganddrop[enter]')
+  elsif Platform.mac
+    VisualAutomation.type('[COMMAND][L]')
+    sleep 1
+    VisualAutomation.type('https[shift][;]//www.w3schools.com/[shift][h][shift][t][shift][M][shift][L]/tryit.asp[shift][?]filename=tryhtml5[shift][-]draganddrop[enter]')
+  else
+    puts 'Unknown Platform'
+    abort
+  end
+  
   sleep 5
   puts 'Looking for "Accept all"'
-  VisualAutomation.click_text('eng', 'Accept all', 0, 0, false, 0, 0, 0, chrome_x + 200, chrome_y - (chrome_height/2).round, chrome_width - 250, (chrome_height/3).round, false)
+
+  if Platform.win
+    VisualAutomation.click_text('eng', 'Accept all', 0, 0, false, 0, 0, 0, chrome_x + 200, chrome_y - (chrome_height/2).round, chrome_width - 250, (chrome_height/3).round, false)
+  
+  elsif Platform.mac
+    begin
+      VisualAutomation.click_text('eng', 'Accept all',0,0,false,0,0,0,-1,-1,-1,-1,false,true)
+    rescue
+      begin
+        VisualAutomation.click_text('pol', 'Zaakceptuj',0,0,false,0,0,0,-1,-1,-1,-1,false,true) 
+      rescue
+        abort '"Accept all" not found'
+      end
+    end
+  else
+    puts 'Unknown Platform'
+    abort
+  end
+
   puts 'Found "Accept all"'
   sleep 3
-  
-  w3img = MiniMagick::Image.open('http://odyn.bivrost360.com/~gawson/logo.png')
+
+  puts 'Downloading logo image'
+  w3img = MiniMagick::Image.open('https://freezeframe.pl/img_logo.png')
   # w3img = MiniMagick::Image.open('logo.png')
   puts w3img.width
   
@@ -551,7 +626,6 @@ begin
 
   find_result = VisualAutomation.visual_find(0, w3img.tempfile.path, 0)
   puts find_result
-
   start_x = (find_result.x + find_result.w / 2).round
   start_y = (find_result.y - find_result.h / 2).round
 
@@ -563,10 +637,21 @@ begin
 
   sleep 5
 
-  VisualAutomation.type('[CONTROL][L]justjoin.it[enter]')
+  if Platform.win
+    VisualAutomation.type('[CONTROL][L]justjoin.it[enter]')
+  elsif Platform.mac
+    VisualAutomation.type('[COMMAND][L]')
+    sleep 1
+    VisualAutomation.type('justjoin.it[enter]')
+  else
+    puts 'Unknown Platform'
+    abort
+  end
+  
   sleep 3
 
-  VisualAutomation.type('[win][up]')
+  driver.manage.window.maximize();
+  # VisualAutomation.type('[win][up]')
   sleep 4
 
   # update chrome window rect after win+up
@@ -582,7 +667,7 @@ begin
   VisualAutomation.click_coordinates((chrome_width/2).round, VisualAutomation.status.screens[0]['height'] - (150 * dpi_factor).round)
   sleep 2
 
-  ruby_image = MiniMagick::Image.open('http://odyn.bivrost360.com/~gawson/ruby.png')
+  ruby_image = MiniMagick::Image.open('https://freezeframe.pl/ruby.png')
   # ruby_image = MiniMagick::Image.open('ruby.png')
   puts 'Image downloaded'
 
