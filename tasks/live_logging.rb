@@ -9,6 +9,8 @@ include Helper
 
 payload = load_payload
 
+print_debug
+
 60.times do
   response = Faraday.post(payload['live_logging_url']) do |req|
     req.headers['Content-Type'] = 'application/json'

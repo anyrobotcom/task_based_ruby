@@ -8,6 +8,8 @@ require_relative '../lib/helper'
 
 include Helper
 
+print_debug
+
 # VisualAutomation examples
 class VisualAutomation 
   @@localUrl = 'http://localhost:7777/api/v1'

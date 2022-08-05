@@ -7,6 +7,8 @@ require_relative '../lib/helper'
 
 include Helper
 
+print_debug
+
 payload = load_payload
 
 response = Faraday.post(payload['results_url']) do |req|
