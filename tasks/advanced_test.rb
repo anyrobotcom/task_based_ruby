@@ -1,8 +1,13 @@
 require 'rubyXL'
 require 'rubyXL/convenience_methods'
 require 'watir'
+require_relative '../lib/helper'
+
+include Helper
 
 $stdout.sync = true
+
+print_debug
 
 puts 'Testing Excel loading...'
 

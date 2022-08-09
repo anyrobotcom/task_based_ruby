@@ -7,6 +7,8 @@ include Helper
 
 $stdout.sync = true
 
+print_debug
+
 # Test output with
 
 puts "Hello, I'm AnyRobot! 😀"

@@ -12,6 +12,15 @@ def run_command_with_live_logging(cmd)
   end
 end
 
+puts "---------- SCRIPT DETAILS"
+puts "RUNNING FILE: #{__dir__ + "/" + __FILE__}"
+if File.exist?("input/payload.json")
+  puts "---------- PAYLOAD"
+  puts `cat input/payload.json`
+else
+  puts "PAYLOAD: NONE"
+end
+
 run_command_with_live_logging("cd \"#{ENV['HOME']}/Code/runnertests/tasks\" && bundle exec ruby visual_automation_tests.rb \"#{Dir.pwd}\"")
 
 if $?.success?
