@@ -12,6 +12,7 @@ def run_command_with_live_logging(cmd)
   end
 end
 
+# --- START OF DEBUG ---
 puts "---------- SCRIPT DETAILS"
 puts "RUNNING FILE: #{__dir__ + "/" + __FILE__}"
 if File.exist?("input/payload.json")
@@ -20,6 +21,9 @@ if File.exist?("input/payload.json")
 else
   puts "PAYLOAD: NONE"
 end
+puts "---------- GIT UPDATE"
+puts `cd ~/Code/runnertests && git pull`
+# --- END OF DEBUG ---
 
 run_command_with_live_logging("cd \"#{ENV['HOME']}/Code/runnertests/tasks\" && bundle exec ruby job_results_success_all_attachments.rb \"#{Dir.pwd}\"")
 

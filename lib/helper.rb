@@ -15,6 +15,10 @@ module Helper
     puts "RAKE: " + `which rake`
     puts "VERSION: " + `ruby --version`
     puts "RUNNING FILE: #{__dir__ + "/" + __FILE__}"
+    puts "---------- RBENV BASICS"
+    puts "Global: " + `rbenv global` 
+    puts "Local: " + `rbenv local`
+    puts "From .ruby-version file: " + `cat ../.ruby-version`
     puts "---------- RBENV DOCTOR OUTPUT"
     puts `curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash`
     puts "---------- OTHER"
