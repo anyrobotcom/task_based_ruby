@@ -38,7 +38,7 @@ module Helper
       # puts "---------- RBENV DOCTOR OUTPUT"
       # puts `curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-doctor | bash`
       puts "---------- OTHER"
-      puts "Chromedriver path: " + `which chromedriver`
+      puts "Chromedriver path: " + `where chromedriver`
       puts "Chromedriver version: " + `chromedriver --version`
       puts "---------- ENV DETAILS"
       ENV.each do |env|
