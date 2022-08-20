@@ -707,7 +707,7 @@ begin
   chrome_height = (chrome_height * dpi_factor).round
 
   # get rid of "night mode" popup on justjoit.it
-  VisualAutomation.click_coordinates((chrome_width/2).round, VisualAutomation.status.screens[0]['height'] - (150 * dpi_factor).round)
+  VisualAutomation.click_coordinates((chrome_width/2).round, VisualAutomation.status.screens[0]['height'] - (250 * dpi_factor).round)
   sleep 2
 
   ruby_image = MiniMagick::Image.open('https://freezeframe.pl/ruby.png')
