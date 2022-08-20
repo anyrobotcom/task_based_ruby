@@ -17,16 +17,16 @@ def safeprint(s):
 
 # Test output with
 
-safeprint("Hello, I'm AnyRobot! 😀")
+safeprint("Hello, I'm AnyRobot! :)")
 
 # Test Chromedriver (remember to install it first)
 
 chromedriver_result = os.popen("chromedriver --version").read()
 
 if chromedriver_result.count("ChromeDriver") > 0:
-  safeprint("Chromedriver is present ✅")
+  safeprint("Chromedriver is present OK")
 else:
-  safeprint("No chromedriver present, aborting 🛑")
+  safeprint("No chromedriver present, aborting STOP")
   sys.exit(1) # Status code > 0 -> problem
 
 # Input ARGV + ENV
