@@ -608,12 +608,14 @@ begin
           puts 'FALLBACK: Checking for accept.png'
           acceptimg = MiniMagick::Image.open('https://freezeframe.pl/accept.png')      
           acceptimg.resize "#{acceptimg.width * dpi_factor}x#{acceptimg.height * dpi_factor}"
+          puts 'END FALLBACK: Checking for akceptuj.png'
           VisualAutomation.click_image(0, acceptimg.tempfile.path, 0)
         rescue
           begin
             puts 'FALLBACK: Checking for akceptuj.png'
             acceptimgpl = MiniMagick::Image.open('https://freezeframe.pl/akceptuj.png')
             acceptimgpl.resize "#{acceptimgpl.width * dpi_factor}x#{acceptimgpl.height * dpi_factor}"
+            puts 'END FALLBACK: Checking for akceptuj.png'
             VisualAutomation.click_image(0, acceptimgpl.tempfile.path, 0)
           rescue
             abort '"Accept all" not found'
@@ -634,12 +636,14 @@ begin
           puts 'FALLBACK: Checking for accept.png'
           acceptimg = MiniMagick::Image.open('https://freezeframe.pl/accept.png')      
           acceptimg.resize "#{acceptimg.width * dpi_factor}x#{acceptimg.height * dpi_factor}"
+          puts 'END FALLBACK: Checking for akceptuj.png'
           VisualAutomation.click_image(0, acceptimg.tempfile.path, 0)
         rescue
           begin
             puts 'FALLBACK: Checking for akceptuj.png'
             acceptimgpl = MiniMagick::Image.open('https://freezeframe.pl/akceptuj.png')      
             acceptimgpl.resize "#{acceptimgpl.width * dpi_factor}x#{acceptimgpl.height * dpi_factor}"
+            puts 'END FALLBACK: Checking for akceptuj.png'
             VisualAutomation.click_image(0, acceptimgpl.tempfile.path, 0)
           rescue
             abort '"Accept all" not found'
