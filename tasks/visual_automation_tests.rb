@@ -608,10 +608,16 @@ begin
         # https://freezeframe.pl/accept.png
         begin
           acceptimg = MiniMagick::Image.open('https://freezeframe.pl/accept.png')      
-          acceptimg.resize "#{w3img.width * dpi_factor}x#{w3img.height * dpi_factor}"
+          acceptimg.resize "#{acceptimg.width * dpi_factor}x#{acceptimg.height * dpi_factor}"
           VisualAutomation.click_image(0, acceptimg.tempfile.path, 0)
         rescue
-          abort '"Accept all" not found'
+          begin
+            acceptimgpl = MiniMagick::Image.open('https://freezeframe.pl/akceptuj.png')      
+            acceptimgpl.resize "#{acceptimgpl.width * dpi_factor}x#{acceptimgpl.height * dpi_factor}"
+            VisualAutomation.click_image(0, acceptimgpl.tempfile.path, 0)
+          rescue
+            abort '"Accept all" not found'
+          end 
         end        
       end
     end
