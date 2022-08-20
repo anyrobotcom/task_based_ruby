@@ -605,7 +605,14 @@ begin
       begin
         VisualAutomation.click_text('pol', 'Zaakceptuj',0,0,false,0,0,0,-1,-1,-1,-1,false,true) 
       rescue
-        abort '"Accept all" not found'
+        # https://freezeframe.pl/accept.png
+        begin
+          acceptimg = MiniMagick::Image.open('https://freezeframe.pl/accept.png')      
+          acceptimg.resize "#{w3img.width * dpi_factor}x#{w3img.height * dpi_factor}"
+          VisualAutomation.click_image(0, acceptimg.tempfile.path, 0)
+        rescue
+          abort '"Accept all" not found'
+        end        
       end
     end
   else
