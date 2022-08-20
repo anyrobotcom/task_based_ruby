@@ -597,9 +597,11 @@ begin
 
   if Platform.win
     begin
+      puts 'BASE: Looking for "Accept all"'
       VisualAutomation.click_text('eng', 'Accept all', 0, 0, false, 0, 0, 0, chrome_x + 200, chrome_y - (chrome_height/2).round, chrome_width - 250, (chrome_height/3).round, false)
     rescue
       begin
+        puts 'BASE: Looking for "Zaakceptuj"'
         VisualAutomation.click_text('pol', 'Zaakceptuj', 0, 0, false, 0, 0, 0, chrome_x + 200, chrome_y - (chrome_height/2).round, chrome_width - 250, (chrome_height/3).round, false)
       rescue
         begin
@@ -610,7 +612,7 @@ begin
         rescue
           begin
             puts 'FALLBACK: Checking for akceptuj.png'
-            acceptimgpl = MiniMagick::Image.open('https://freezeframe.pl/akceptuj.png')      
+            acceptimgpl = MiniMagick::Image.open('https://freezeframe.pl/akceptuj.png')
             acceptimgpl.resize "#{acceptimgpl.width * dpi_factor}x#{acceptimgpl.height * dpi_factor}"
             VisualAutomation.click_image(0, acceptimgpl.tempfile.path, 0)
           rescue
