@@ -52,7 +52,7 @@ elsif Platform.mac
 end
 # --- END OF DEBUG ---
 
-run_command_with_live_logging("cd \"#{ENV['HOME']}/Code/runnertests/tasks\" && bundle exec ruby assist_request_select.rb \"#{Dir.pwd}\"")
+run_command_with_live_logging("cd \"#{ENV['HOME']}/Code/runnertests/tasks\" && python input_test.py \"#{Dir.pwd}\"")
 
 if $?.success?
   exit 0
