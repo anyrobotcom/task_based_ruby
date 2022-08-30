@@ -4,19 +4,29 @@
 
 ### Windows
 
+Prepare Windows machine [according to the wiki](https://unitedideas.atlassian.net/wiki/spaces/ANY/pages/1767079989/New+Bot+-+Windows), then:
+
 ```
-TBA
+windows> md Code # In your home directory
+windows> cd Code
+windows> git clone git@gitlab.unitedideas.co:anyrobot/runnertests.git
+windows> cd runnertests
+windows> bundle install
 ```
 
 ### macOS
 
+Prepare macOS machine [according to the wiki](https://unitedideas.atlassian.net/wiki/spaces/ANY/pages/1765507155/New+Bot+-+macOS), then:
+
+
 ```shell
-mkdir ~/Code
-cd ~/Code && git clone git@gitlab.unitedideas.co:anyrobot/runnertests.git
-cd runnertests && bundle install
+macos> mkdir ~/Code
+macos> cd ~/Code
+macos> git clone git@gitlab.unitedideas.co:anyrobot/runnertests.git
+macos> cd runnertests && bundle install
 ```
 
-## How to
+## How to test?
 
 1. Install `AnyRobot Runner` on your machine and grant rights if needed
 2. Add bot to your Portal
