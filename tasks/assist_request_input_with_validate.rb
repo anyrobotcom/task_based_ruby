@@ -10,7 +10,7 @@ include Helper
 print_debug
 
 payload = load_payload
-
+sleep 1
 response = Faraday.post(payload['assist_requests_url']) do |req|
   req.headers['Content-Type'] = 'application/json'
   req.headers['Authorization'] = 'Bearer ' + payload['secret']
