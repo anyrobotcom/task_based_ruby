@@ -3,6 +3,7 @@
 # frozen_string_literal: true
 
 $stdout.sync = true
+$stderr.sync = true
 def run_command_with_live_logging(cmd)
   IO.popen("#{cmd} 2>&1") do |pipe|
     pipe.sync = true

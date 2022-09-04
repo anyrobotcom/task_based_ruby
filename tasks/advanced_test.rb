@@ -6,6 +6,7 @@ require_relative '../lib/helper'
 include Helper
 
 $stdout.sync = true
+$stderr.sync = true
 
 print_debug
 
