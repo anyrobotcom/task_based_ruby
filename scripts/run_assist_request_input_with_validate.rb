@@ -4,7 +4,7 @@
 
 $stdout.sync = true
 def run_command_with_live_logging(cmd)
-  IO.popen("#{cmd}") do |pipe|
+  IO.popen("#{cmd} 2>&1") do |pipe|
     pipe.sync = true
     while (str = pipe.gets)
       puts str
@@ -52,7 +52,7 @@ elsif Platform.mac
 end
 # --- END OF DEBUG ---
 
-run_command_with_live_logging("cd \"#{ENV['HOME']}/Code/runnertests/tasks\" && bundle exec ruby -e '$stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)' assist_request_input_with_validate.rb \"#{Dir.pwd}\"")
+run_command_with_live_logging("cd \"#{ENV['HOME']}/Code/runnertests/tasks\" && bundle exec ruby assist_request_input_with_validate.rb \"#{Dir.pwd}\"")
 
 if $?.success?
   exit 0
