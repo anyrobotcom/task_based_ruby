@@ -4,7 +4,7 @@
 
 $stdout.sync = true
 def run_command_with_live_logging(cmd)
-  IO.popen("#{cmd} 2>&1") do |pipe|
+  IO.popen("#{cmd}") do |pipe|
     pipe.sync = true
     while (str = pipe.gets)
       puts str
