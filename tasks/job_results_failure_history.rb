@@ -33,7 +33,8 @@ response = Faraday.post(payload['results_url']) do |req|
 end
 
 puts 'response created'
-puts 'response code == ' + response.status
+puts 'response code == '
+puts response.status
 
 abort 'Failed to create Job Result' unless 201 == response.status
 puts 'Successfully created Job Result on failure'
