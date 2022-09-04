@@ -9,7 +9,11 @@ include Helper
 
 print_debug
 
+puts 'getting payload'
+
 payload = load_payload
+
+puts 'creating response'
 
 response = Faraday.post(payload['results_url']) do |req|
   req.headers['Content-Type'] = 'application/json'
@@ -27,6 +31,9 @@ response = Faraday.post(payload['results_url']) do |req|
     { genre: :kpi, name: 'stats.kpi', code: :important_stuff, body: { genre: :integer, value: 9, target: 13, display: :gauge } },
   ] }.to_json
 end
+
+puts 'response created'
+puts 'response code == ' + response.status
 
 abort 'Failed to create Job Result' unless 201 == response.status
 puts 'Successfully created Job Result on failure'
